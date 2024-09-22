@@ -84,7 +84,31 @@ def main():
     st.set_page_config("Chat PDF")
     st.header("Chat with PDF using Gemini")
 
-    user_question = st.text_input("Ask a Question from the PDF files")
+    # Add custom CSS to style the text input box
+    st.markdown("""
+        <style>
+        .stTextInput > div > input {
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #4CAF50;
+            background-color: #f0f8ff;
+            margin-bottom: 15px;
+        }
+        .custom-label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Create a label for the question input
+    st.markdown('<div class="custom-label">Ask a Question from the PDF files:</div>', unsafe_allow_html=True)
+    
+    # Create the question input without the 'class_' argument
+    user_question = st.text_input("", key="user_question", placeholder="Enter your question here...")
 
     if user_question:
         # Retrieve the temperature value from the sidebar
