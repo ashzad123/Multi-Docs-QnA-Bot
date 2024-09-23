@@ -79,6 +79,7 @@ def user_input(user_question, temperature):
     st.write("Reply:", response["output_text"])
 
 
+
 # Main function for Streamlit app
 def main():
     st.set_page_config("Chat PDF")
@@ -117,33 +118,43 @@ def main():
 
     with st.sidebar:
         st.title("Menu:")
+        
+        # Replace the slider with a number input
+        chunk_size = st.number_input("Set chunk size (number of characters):", min_value=100, max_value=5000, value=1000, step=100)
+
         pdf_docs = st.file_uploader(
             "Upload your PDF files and Click on the Submit & Process Button",
             accept_multiple_files=True,
         )
+        
         if st.button("Submit & Process"):
             with st.spinner("Processing..."):
                 raw_text = get_pdf_text(pdf_docs)
-                text_chunks = get_text_chunks(raw_text)
+                text_chunks = get_text_chunks(raw_text, chunk_size)  # Pass user-defined chunk size
                 get_vector_store(text_chunks)
                 st.success("Done")
 
-        # Add temperature explanation and slider to the sidebar
+        # Add temperature explanation and number input to the sidebar
         st.write("**Temperature Control:**")
         st.write(
             """
         The temperature controls the model's creativity:
         
-        - A **lower value** (closer to 0.0) makes the model more focused and deterministic, leading to more accurate and predictable answers based on the provided context.
-        - A **higher value** (closer to 1.0) increases creativity, making the model more flexible and generating more diverse or imaginative responses, but it may also stray from strict accuracy.
+        - A **lower value** (closer to 0.0) makes the model more focused and deterministic.
+        - A **higher value** (closer to 1.0) increases creativity but may lead to less accurate answers.
         """
         )
 
-        # Temperature slider in the sidebar
-        st.session_state["temperature"] = st.slider(
+        # Temperature number input in the sidebar
+        st.session_state["temperature"] = st.number_input(
             "Choose the temperature for the model (affects creativity)", 0.0, 1.0, 0.3
         )
 
+# Modify get_text_chunks function to accept chunk_size parameter
+def get_text_chunks(text, chunk_size):
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=100)
+    chunks = text_splitter.split_text(text)
+    return chunks
 
 if __name__ == "__main__":
     main()
