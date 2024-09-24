@@ -30,7 +30,7 @@ Multi-Docs-QnA-Bot
 ```
 #### 3.Create a virtual environment and activate it.
 ```bash
-pytohn -m venv <environment name>
+python -m venv <environment name>
 source <environment name>/bin/activate (for Linux)
 <environment name>\Script\activate (for Windows)
 ```
