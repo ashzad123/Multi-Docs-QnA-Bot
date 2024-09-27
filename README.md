@@ -140,9 +140,32 @@ def user_input(user_question, temperature, word_limit):
     )
 
     st.write("Reply:", response["output_text"])
+```
+## Streamlit UI Components
+### Temperature and Word Limit
 
+- **Temperature Input**: The temperature input controls the creativity of the AI model. A lower value makes the model more deterministic, while a higher value makes it more creative.
+python
 
+```bash
+ st.session_state["temperature"] = st.number_input(
+    "Choose the temperature for the model (affects creativity)", 0.0, 1.0, 0.3 )
+```
+- **Word Limit Input**: Allows the user to control how long the response should be based on the given word limit between 100 to 5000.
+```bash
+ chunk_size = st.number_input("Set chunk size (number of characters):", min_value=100, max_value=5000, value=1000, step=100)
 ```
 
+### PDF Upload
+- Users can upload their PDF files via the Streamlit file uploader, and the app will process them into chunks for the QnA system.
+```bash
+pdf_docs = st.file_uploader(
+    "Upload your PDF files and Click on the Submit & Process Button",
+    accept_multiple_files=True,
+)
+```
+
+### Processing and Response
+Once the PDFs are uploaded and processed, users can ask questions using a text input box, and the model will respond with an answer based on the PDF contents.
 
 
