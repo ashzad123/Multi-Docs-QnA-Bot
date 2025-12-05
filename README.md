@@ -1,4 +1,3 @@
-
 # Multi QnA bot using Langchain
 
 This project allows users to chat with multiple PDF documents by leveraging Langchain, Google Generative AI, and FAISS for building an efficient question-answering (QnA) bot. Users can upload PDFs, process them into chunks, and ask questions, while the chatbot searches for relevant answers within the PDFs and responds using a generative AI model. The bot’s behavior, including response word limit and creativity (temperature), can be customized via user input.
@@ -167,5 +166,32 @@ pdf_docs = st.file_uploader(
 
 ### Processing and Response
 Once the PDFs are uploaded and processed, users can ask questions using a text input box, and the model will respond with an answer based on the PDF contents.
+
+## Recent Updates
+
+### Added Sentence Transformers
+- Integrated `sentence-transformers` as an alternative embedding provider.
+- This allows users to switch from Google Generative AI embeddings to Sentence Transformers for generating embeddings locally.
+
+### Updated Installation Instructions
+- Ensure `sentence-transformers` is installed:
+  ```bash
+  pip install sentence-transformers
+  ```
+
+### Updated `get_vector_store` Function
+- The `get_vector_store` function now supports Sentence Transformers as a fallback embedding provider. This ensures the app can work without relying solely on external APIs.
+
+### How to Use Sentence Transformers
+- To use Sentence Transformers, modify the `get_vector_store` function in `app.py` to:
+  ```python
+  from sentence_transformers import SentenceTransformer
+
+  def get_vector_store(text_chunks):
+      model = SentenceTransformer('all-MiniLM-L6-v2')
+      embeddings = [model.encode(chunk) for chunk in text_chunks]
+      vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
+      vector_store.save_local("faiss_index")
+  ```
 
 
